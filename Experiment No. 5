@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Flutter Form Example')),
+        body: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: MyForm(),
+        ),
+      ),
+    );
+  }
+}
+
+class MyForm extends StatefulWidget {
+  const MyForm({super.key});
+
+  @override
+  _MyFormState createState() => _MyFormState();
+}
+
+class _MyFormState extends State<MyForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? dropdownValue;
+  bool switchValue = false;
+  DateTime? selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // 1. Text Input
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Name'),
+              validator: (value) => value!.isEmpty ? 'Enter your name' : null,
+            ),
+
+            // 2. Email Input
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) => value!.contains('@') ? null : 'Enter a valid email',
+            ),
+
+            // 3. Password Input
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              validator: (value) => value!.length < 6 ? 'Minimum 6 characters' : null,
+            ),
+
+            // 4. Number Input
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Age'),
+              keyboardType: TextInputType.number,
+              validator: (value) => int.tryParse(value!) == null ? 'Enter a valid number' : null,
+            ),
+
+            // 5. Dropdown
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(labelText: 'Gender'),
+              value: dropdownValue,
+              items: ['Male', 'Female', 'Other']
+                  .map((label) => DropdownMenuItem(child: Text(label), value: label))
+                  .toList(),
+              onChanged: (value) => setState(() => dropdownValue = value),
+              validator: (value) => value == null ? 'Select a gender' : null,
+            ),
+
+            // 6. Date Picker
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(selectedDate == null
+                    ? 'Select Date of Birth'
+                    : 'DOB: ${selectedDate!.toLocal()}'.split(' ')[0]),
+                IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () => _selectDate(context),
+                ),
+              ],
+            ),
+
+            // 7. Switch Input
+            SwitchListTile(
+              title: const Text('Enable Notifications'),
+              value: switchValue,
+              onChanged: (value) => setState(() => switchValue = value),
+            ),
+
+            // 8. Checkbox
+            CheckboxListTile(
+              title: const Text('Agree to Terms'),
+              value: switchValue,
+              onChanged: (value) => setState(() => switchValue = value ?? false),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Submit Button
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
