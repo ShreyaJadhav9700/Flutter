@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+void main()
+{
+  runApp(Myapp());
+}
+class Myapp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('List'),
+        ),
+        body:
+        ListView(
+          children: [
+            Text('one', style: TextStyle(fontSize: 40, color: Colors.blue),),
+            Text('two', style: TextStyle(fontSize: 40, color: Colors.blue),),
+            Text('three', style: TextStyle(fontSize: 40, color: Colors.blue),),
+            Text('four', style: TextStyle(fontSize: 40, color: Colors.blue),)
+          ],
+        ),
+      ),
+    );
+  }
+}
