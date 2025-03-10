@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(Myapp());
+}
+class Myapp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    // Material App
+    return MaterialApp(
+
+      // Scaffold Widget
+        home: Scaffold(
+          appBar: AppBar(
+            // AppBar takes a Text Widget
+            // in it's title parameter
+            title:Text('Home'),
+          ),
+          body: Center(child: Text('Hello World')),
+        ));
+  }
+}
